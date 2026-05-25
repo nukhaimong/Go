@@ -13,7 +13,7 @@
 *.out
 
 # Common custom binary names (add your app name here if different)
-bin/
+/bin/
 /pkg/
 main
 server
