@@ -2,6 +2,23 @@ package main
 
 import "fmt"
 
+// fucntion in go
+func makeCoffee(kind string, isSugar bool) {
+	var sugar string
+	if isSugar {
+		sugar = "with sugar"
+	} else {
+		sugar = "without sugar"
+	}
+	fmt.Printf("Making %s coffee %s \n", kind, sugar)
+}
+
+func add(x, y int) string {
+	addition := x + y
+	str := fmt.Sprintf("%d", addition)
+	return str
+}
+
 func main() {
 	var txt string
 	txt = "Hello, world"
@@ -33,7 +50,13 @@ func main() {
 
 	fmt.Printf("This is %s course of web dev, batch %d and the course rating is %f", course, batch, rating)
 
-	formattedString := fmt.Sprintf("This is %s course of web dev, batch %d and the course rating is %f", course, batch, rating)
+	formattedString := fmt.Sprintf("This is %s course of web dev, batch %d and the course rating is %f ", course, batch, rating)
 
 	fmt.Println(formattedString)
+
+	makeCoffee("Black", false)
+	makeCoffee("Gold", true)
+
+	addition := add(2, 3)
+	fmt.Println("addition", addition)
 }
