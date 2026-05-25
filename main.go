@@ -13,10 +13,15 @@ func makeCoffee(kind string, isSugar bool) {
 	fmt.Printf("Making %s coffee %s \n", kind, sugar)
 }
 
-func add(x, y int) string {
+func add(x, y int) (str string, substraction int) {
+	// addition := x + y
+	// substraction := y - x
+	// str := fmt.Sprintf("%d", addition)
+	// return str, substraction
 	addition := x + y
-	str := fmt.Sprintf("%d", addition)
-	return str
+	substraction = y - x
+	str = fmt.Sprintf("%d", addition)
+	return
 }
 
 func main() {
@@ -57,6 +62,6 @@ func main() {
 	makeCoffee("Black", false)
 	makeCoffee("Gold", true)
 
-	addition := add(2, 3)
-	fmt.Println("addition", addition)
+	addition, substration := add(2, 3)
+	fmt.Println("addition", addition, "subsration", substration)
 }
