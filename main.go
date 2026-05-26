@@ -24,6 +24,18 @@ func add(x, y int) (str string, substraction int) {
 	return
 }
 
+// Variable Scope
+func variableScope() {
+	// normally variable can only accessible in its block scope
+	sugar := 2
+	makeJekono := func() {
+		sugar := 3
+		fmt.Printf("jekono amount %d \n", sugar)
+	}
+	makeJekono()
+	fmt.Printf("sugar %d \n", sugar)
+}
+
 func main() {
 	var txt string
 	txt = "Hello, world"
@@ -64,4 +76,22 @@ func main() {
 
 	addition, substration := add(2, 3)
 	fmt.Println("addition", addition, "subsration", substration)
+
+	// we cannot write a named function within a function, but we can write and an anonymous function and store it in a variable
+
+	innerFunc := func() {
+		fmt.Println("Inner Anonymouse Function")
+	}
+	innerFunc()
+
+	// also can write as IIFE function -> immediately invoke function expression
+	func() {
+		fmt.Println("IIFE Function inside a function")
+	}()
+
+	func(coffeeType string) {
+		fmt.Printf("Making %s Coffee...\n", coffeeType)
+	}("Black")
+
+	variableScope()
 }
