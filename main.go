@@ -1,4 +1,4 @@
-package main
+package main //executable pakage
 
 import "fmt"
 
@@ -34,6 +34,10 @@ func variableScope() {
 	}
 	makeJekono()
 	fmt.Printf("sugar %d \n", sugar)
+}
+
+func init() {
+	fmt.Println("This is init function, it will be called before main function")
 }
 
 func main() {
