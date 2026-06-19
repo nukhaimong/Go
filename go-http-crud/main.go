@@ -5,10 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"slices"
+	"os"
 	"strconv"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/joho/godotenv"
 )
 
 type User struct {
@@ -38,7 +39,7 @@ var db *pgx.Conn
 func connectDB() {
 	var err error
 
-	connectStr := "postgres://postgres:nujeta834%23%23@localhost:5432/go_crud"
+	connectStr := os.Getenv("DATABASE_URL")
 
 	db, err = pgx.Connect(context.Background(), connectStr)
 	if err != nil {
@@ -49,6 +50,13 @@ func connectDB() {
 }
 
 func main() {
+	var err error
+
+	err = godotenv.Load()
+	if err != nil {
+		panic("env file not found")
+	}
+
 	connectDB()
 	defer db.Close(context.Background())
 
@@ -64,7 +72,7 @@ func main() {
 
 	fmt.Println("Server is running on http://localhost:5000")
 
-	err := http.ListenAndServe(":5000", mux)
+	err = http.ListenAndServe(":5000", mux)
 	if err != nil {
 		fmt.Println("Server Error", err)
 	}
@@ -87,7 +95,7 @@ func createUserHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "Invalid request body")
 		return
 	}
-	fmt.Println(newUser)
+	// fmt.Println(newUser)
 
 	// newUser.Id = len(users) + 1
 	// users = append(users, newUser)
@@ -218,14 +226,29 @@ func deleteUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	for idx, user := range users {
-		if user.Id == id {
-			//users = append(users[:idx], users[idx+1:]...)
-			users = slices.Delete(users, idx, idx+1)
-			w.WriteHeader(http.StatusNoContent)
-			return
-		}
+	// for idx, user := range users {
+	// 	if user.Id == id {
+	// 		//users = append(users[:idx], users[idx+1:]...)
+	// 		users = slices.Delete(users, idx, idx+1)
+	// 		w.WriteHeader(http.StatusNoContent)
+	// 		return
+	// 	}
+	// }
+
+	query := `delete from users where id = $1`
+
+	cmdTag, err := db.Exec(context.Background(), query, id)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, "Could not delete user")
+		return
 	}
-	w.WriteHeader(http.StatusNotFound)
-	fmt.Fprintln(w, "User Not Found")
+	if cmdTag.RowsAffected() != 1 {
+		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprintln(w, "User not found")
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
+	fmt.Fprintln(w, "User deleted successfully")
 }
